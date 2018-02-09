@@ -238,5 +238,6 @@ return [
     ],
 
     'upload_path'   =>  ROOT_PATH . 'resources/upload',
-    'temp_path'   =>  ROOT_PATH . 'resources/temp'  //  临时文件目录
+    'temp_path'   =>  ROOT_PATH . 'resources/temp',  //  临时文件目录
+    'dump_path'   =>  ROOT_PATH . 'resources/dump'  //  面试记录导出目录
 ];

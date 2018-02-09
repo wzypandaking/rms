@@ -55,7 +55,7 @@
         <!-- 内容主体区域 -->
         <div style="padding: 15px;">
 
-            <form class="layui-form">
+            <form class="layui-form" lay-filter="download">
                 <div class="layui-row">
                     <div class="layui-col-md3">
                         <label class="layui-form-label">面试时间</label>
@@ -74,6 +74,12 @@
                             <select id="interviewer" lay-filter="filter-interview" lay-search>
                                 <option value="-1">全部</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md2">
+                        <div class="layui-input-block">
+                            <button class="layui-btn">导出</button>
                         </div>
                     </div>
                 </div>
@@ -107,10 +113,10 @@
             ,url: '/interview/job' //数据接口
             ,page: true //开启分页
             ,cols: [[ //表头
-                {field: 'interview_name', title: '面试官', width: 80, fixed:'left'}
-                ,{field: 'interview_mobile', title: '面试官联系方式', width: 120, fixed:'left'}
-                ,{field: 'name', title: '姓名', width:80}
-                ,{field: 'mobile', title: '联系方式', width:120}
+                {field: 'name', title: '姓名', width:80, fixed:'left'}
+                ,{field: 'mobile', title: '联系方式', width:120, fixed:'left'}
+                ,{field: 'interview_name', title: '面试官', width: 80}
+                ,{field: 'interview_mobile', title: '面试官联系方式', width: 120}
                 ,{field: 'book_time', title: '面试时间', width:180, templet:"#bookTimeTpl"}
                 ,{field: 'type', title: '状态', width: 80, templet:"#typeTpl"}
                 ,{field: 'sex', title: '性别', width:80, sort: true, templet:"#sexTpl"}
@@ -135,6 +141,14 @@
                 interviewId:data.value,
                 time:$('#time').val()
             })
+        });
+        form.on("submit(download)", function () {
+            var index = layer.open({
+                type:2,
+                content:'/book/download?interviewId=' + $('#interviewer').val() + "&time="+$('#bookTime').val()
+            });
+            layer.close(index);
+            return false;
         });
 
     });
