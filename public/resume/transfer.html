@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>layout 后台大布局 - Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="/static/layui/css/layui.css?t=1515376178738"  media="all">
+</head>
+<body>
+<div style="padding-right:60px;padding-top: 15px">
+    <form class="layui-form"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+        <div class="layui-form-item">
+            <label class="layui-form-label">面试人</label>
+            <div class="layui-input-block">
+                <select name="interviewer" id="interviewer" lay-search lay-verify="required">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">预约时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="book_interview_time" class="layui-input" id="book_interview_time">
+                <br />
+                <small>可不填，不填写时，使用的是你当前的预约时间</small>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="transfer">立即提交</button>
+            </div>
+        </div>
+        <!-- 更多表单结构排版请移步文档左侧【页面元素-表单】一项阅览 -->
+    </form>
+</div>
+<script src="/static/layui/layui.js?t=1515376178738" charset="utf-8"></script>
+<script src="/static/common.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            type:'datetime',
+            elem: '#book_interview_time' //指定元素
+        });
+    });
+</script>
+<script type="text/javascript">
+    layui.use(["jquery", 'form'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+
+        $.ajax({
+            url:'/interview/index',
+            dataType:'json',
+            async:false,
+            success:function (result) {
+                $.each(result, function (key, item) {
+                    var tmp = [];
+                    tmp.push(item.name);
+                    tmp.push(item.mobile);
+                    tmp.push(item.email);
+                    $('#interviewer').append('<option value="' + item.id + '">' + tmp.join(' | ') + '</option>');
+                });
+                form.render('select');
+            }
+        });
+
+        form.on('submit(transfer)', function () {
+            $.ajax({
+                url:"/resume/transfer/confirm",
+                type:"post",
+                data: $('.layui-form').serialize() + "&bookId=" + getQueryString("id"),
+                dataType:"json",
+                success:function (result) {
+                    layer.alert(result.message, function () {
+                        if (result.success) {
+                            parent.layer.closeAll();
+                            parent.window.location.reload();
+                        }
+                    });
+                }
+            });
+            return false;
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/layui/css/layui.css?t=1515376178738"  media="all">
+</head>
+<body>
+<div style="padding-right:60px;padding-top: 15px">
+    <form class="layui-form" action="#">
+        <div class="layui-form-item">
+            <label class="layui-form-label">单选框</label>
+            <div class="layui-input-block">
+                <input type="radio" name="type" value="1" title="通过">
+                <input type="radio" name="type" value="2" title="发Offer">
+                <input type="radio" name="type" value="0" title="淘汰">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">反馈</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请填写面试反馈" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="feedback">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="/static/layui/layui.js?t=1515376178738" charset="utf-8"></script>
+<script src="/static/common.js"></script>
+<script type="text/javascript">
+ layui.use(['form', 'jquery', 'layer'], function () {
+    var form = layui.form;
+    var $ = layui.jquery;
+    form.on('submit(feedback)', function () {
+       $.ajax({
+           url:"/book/feedback/confirm",
+           type:'post',
+           data:{
+               interviewId:getQueryString("interviewId"),
+               resumeId:getQueryString("resumeId"),
+               type:$('input[name="type"]:checked').val(),
+               result:$('textarea').val()
+           },
+           dataType:'json',
+           success:function (result) {
+               if (result.success) {
+                   parent.layer.closeAll();
+                   parent.window.location.reload();
+               } else {
+                   layer.alert(result.message);
+               }
+           }
+       });
+       return false;
+    });
+ });
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>招聘管理系统（RMS）</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="/static/layui/css/layui.css?t=1515376178738"  media="all">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">招聘管理系统</div>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">简历</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/resume/index.html">筛选</a></dd>
+                        <dd><a href="/resume/eliminate.html">淘汰</a></dd>
+                        <dd><a href="/resume/offer.html">offer</a></dd>
+                        <dd><a href="/resume/blacklist.html">黑名单</a></dd>
+                        <dd><a href="/resume/import.html">批量导入</a></dd>
+                        <dd><a href="/resume/easy.html">快速导入</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">面试官</a>
+                    <dl class="layui-nav-child">
+                        <dd class="layui-this"><a href="/interview/list.html">列表</a></dd>
+                        <dd><a href="/interview/add.html">添加</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">面试安排</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/interview/job.html">我的面试</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <b>计算规则如下:</b><br />
+            1、面试数 = 通过数 + 淘汰数 + offer数&nbsp;&nbsp;<br />
+            2、总数 = 通过数 + 淘汰数 + ffer数 + 转移数（转发给其他人进行面试）+ 未面数（已分配，但没有面试）<br />
+            3、淘汰率 = (淘汰数 / 面试数)&nbsp;&nbsp;<br />
+            4、通过率 = (通过数 / 面试数)<br />
+            5、Offer率 = Offer数 / 面试数&nbsp;&nbsp;<br />
+            6、转移率 = 转移数 / (总数 - 未面数)<br />
+
+            <table id="resume-list"></table>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        招聘管理系统
+    </div>
+</div>
+<script src="/static/layui/layui.js?t=1515376178738" charset="utf-8"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+</script>
+
+<script>
+    layui.use(['table', 'jquery'], function(){
+        var table = layui.table;
+        var $ = layui.jquery;
+        table.render({
+            elem: '#resume-list'
+            ,url: '/interview/lists' //数据接口
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {field: 'name', title: '姓名', width:100}
+                ,{field: 'mobile', title: '联系方式', width:120}
+                ,{field: 'email', title: '邮箱', width: 200}
+                ,{field: 'eliminate', title: '淘汰率', width: 80, templet:"#eliminateTpl"}
+                ,{field: 'pass', title: '通过率', width: 80, templet:"#passTpl"}
+                ,{field: 'offer', title: 'Offer率', width: 80, templet:"#offerTpl"}
+                ,{field: 'transfer', title: '转移率', width: 80, templet:"#transferTpl"}
+            ]]
+        });
+        $('#resume-search-form').submit(function () {
+            var param = {};
+            $.each(this.elements, function (k, child) {
+                if (child.value) {
+                    param[child.name] = child.value;
+                }
+            });
+            table.reload("resume-list", {
+                url: '/interview/lists' //数据接口
+                ,where : param
+            });
+            return false;
+        });
+    });
+</script>
+<script type="text/html" id="eliminateTpl">
+    {{# if(d.eliminate > 0) { }}
+        {{(d.eliminate / parseFloat(d.eliminate + d.offer + d.pass)).toFixed(2)}}
+    {{# } else { }}
+        0
+    {{# } }}
+</script>
+<script type="text/html" id="passTpl">
+    {{# if(d.pass > 0) { }}
+        {{(d.pass / parseFloat(d.eliminate + d.offer + d.pass)).toFixed(2)}}
+    {{# } else { }}
+        0
+    {{# } }}
+</script>
+<script type="text/html" id="offerTpl">
+    {{# if(d.offer > 0) { }}
+        {{(d.offer / parseFloat(d.eliminate + d.offer + d.pass)).toFixed(2)}}
+    {{# } else { }}
+        0
+    {{# } }}
+</script>
+<script type="text/html" id="transferTpl">
+    {{# if(d.transfer > 0) { }}
+        {{((d.transfer) / parseFloat(d.total - d.un_interview)).toFixed(2)}}
+    {{# } else { }}
+        0
+    {{# } }}
+</script>
+
+<script type="text/javascript">
+    layui.use(["layer", 'jquery'], function () {
+        var layer = layui.layer;
+        var $ = layui.jquery;
+
+        $(document).on('click', "button.layui-btn", function () {
+            var index = layer.open({
+                type:2,
+                title: $(this).data('title'),
+                area:[$(this).data('layer-width') + "px", $(this).data('layer-height') + "px"],
+                content: $(this).data('target')
+            });
+            if ($(this).data('layer-max')) {
+                layer.full(index);
+            }
+        });
+    });
+</script>
+</body>
+</html>

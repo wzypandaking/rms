@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>招聘管理系统（RMS）</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="/static/layui/css/layui.css?t=1515376178738"  media="all">
+</head>
+<body>
+
+    &nbsp;&nbsp;<button class="layui-btn submit">检查完毕</button>
+    <table id="resume-list" lay-filter="edit-cell"></table>
+<script src="/static/layui/layui.js?t=1515376178738" charset="utf-8"></script>
+<script src="/static/common.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+
+    layui.use(["table", "jquery", 'layer'], function () {
+        var table = layui.table;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        table.render({
+            elem: '#resume-list'
+            ,url:"/resume/import/check"
+            ,where:{
+                token:getQueryString("token")
+            }
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {field: 'name', title: '姓名', width:100, edit:"text"}
+                ,{field: 'sex', title: '性别', width: 70, edit:"text"}
+                ,{field: 'mobile', title: '联系方式', width:120, edit:"text"}
+                ,{field: 'post', title: '应聘岗位', width: 180, edit:"text"}
+                ,{field: 'email', title: '邮箱', width: 200, edit:"text"}
+                ,{field: 'resume_file_path', title: '简历名称', width: 600}
+            ]]
+        });
+        table.on('edit(edit-cell)', function (obj) {
+            $.ajax({
+                url:"/resume/import/modify",
+                data: obj.data,
+                type:'post',
+                dataType:'json',
+                success:function (result) {
+                    // 进行修改
+                }
+            });
+        });
+
+        $('button.submit').click(function () {
+            layer.confirm("本次提交只会将数据完整的同步到简历库中!", {
+                btn:['确认', '取消'],
+                yes:function(index, layero) {
+                    $.ajax({
+                        url:"/resume/import/sync",
+                        data:{
+                            token:getQueryString("token")
+                        },
+                        dataType:'json',
+                        success:function (result) {
+                            layer.alert(result.message, function () {
+                                layer.closeAll();
+                                parent.layer.closeAll();
+                            });
+                        }
+                    })
+                }
+            });
+        });
+
+    })
+</script>
+</body>
+</html>

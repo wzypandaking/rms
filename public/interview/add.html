@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>招聘管理系统（RMS）</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="/static/layui/css/layui.css?t=1515376178738"  media="all">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">招聘管理系统</div>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">简历</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/resume/index.html">筛选</a></dd>
+                        <dd><a href="/resume/eliminate.html">淘汰</a></dd>
+                        <dd><a href="/resume/offer.html">offer</a></dd>
+                        <dd><a href="/resume/blacklist.html">黑名单</a></dd>
+                        <dd><a href="/resume/import.html">批量导入</a></dd>
+                        <dd><a href="/resume/easy.html">快速导入</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">面试官</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/interview/list.html">列表</a></dd>
+                        <dd class="layui-this"><a href="/interview/add.html">添加</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">面试安排</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/interview/job.html">我的面试</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <form class="layui-form" id="interview-add-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" placeholder="请输入姓名" class="layui-input" lay-verify="required">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">联系方式:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="mobile" placeholder="请输入联系方式" class="layui-input" lay-verify="phone">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="email" placeholder="请输入邮箱" class="layui-input" lay-verify="email">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="add-interview">添加</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        招聘管理系统
+    </div>
+</div>
+<script src="/static/layui/layui.js?t=1515376178738" charset="utf-8"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+
+    layui.use('form', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        form.on('submit(add-interview)', function () {
+            $.ajax({
+                url:'/interview/add',
+                data:$('#interview-add-form').serialize(),
+                type:'post',
+                dataType:'json',
+                success:function (result) {
+                    if (result.success) {
+                        layer.alert(result.message, function () {
+                            window.location.reload();
+                        });
+                    } else {
+                        layer.alert(result.message);
+                    }
+                }
+            });
+            return false;
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>招聘管理系统（RMS）</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="/static/layui/css/layui.css?t=1515376178738"  media="all">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">招聘管理系统</div>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">简历</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/resume/index.html">筛选</a></dd>
+                        <dd><a href="/resume/eliminate.html">淘汰</a></dd>
+                        <dd><a href="/resume/offer.html">offer</a></dd>
+                        <dd><a href="/resume/blacklist.html">黑名单</a></dd>
+                        <dd class="layui-this"><a href="/resume/import.html">批量导入</a></dd>
+                        <dd><a href="/resume/easy.html">快速导入</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">面试官</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/interview/list.html">列表</a></dd>
+                        <dd><a href="/interview/add.html">添加</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">面试安排</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/interview/job.html">我的面试</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <b style="font-size: 24px">步骤介绍：</b><br />
+                    1、<a href="/static/import.xlsx">下载</a>模板（PS:模板名称不能更改，模板名称为：import.xlsx）<br />
+                    2、<b>姓名</b>、<b>手机号</b>为必填字段<br />
+                    3、简历名称规则：姓名 + 手机号，用于将表格数据和简历做对应<br />
+                    4、将简历和模板放到同一个文件夹下<br />
+                    5、生成<b>zip</b>压缩包进行上传。<br />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit id="upload-btn">上传</button>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-block">
+                        <a href="/resume/import.xlsx" class="layui-btn layui-btn-normal">下载模板</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        招聘管理系统
+    </div>
+</div>
+<script src="/static/layui/layui.js?t=1515376178738" charset="utf-8"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+
+    layui.use("upload", function () {
+        var upload = layui.upload;
+        upload.render({
+            elem: '#upload-btn',
+            url : '/resume/import',
+            accept:'file',
+            exts:'zip',
+            done: function (res) {
+                layer.alert(res.message);
+            }
+        })
+    })
+</script>
+
+</body>
+</html>
