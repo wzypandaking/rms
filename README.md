@@ -14,6 +14,10 @@
 
 ## 简历分析
 
+目前支持的格式有：docx、doc、pdf
+
+从简历中提取内容使用到了:[phpword](https://github.com/PHPOffice/PHPWord)、[pdfparse](https://github.com/smalot/pdfparser)
+
 如果使用简历上传的第2个途径，会进行简历的分析。
 从简历内容、简历名称中，提取应聘人姓名、手机号，性别、邮箱、应聘职位信息。
 经过上传人进行二次确认后，达到有效标准，才能进入简历库中。
@@ -22,7 +26,7 @@
 
 目前对职位只分析了：Java、Android、IOS、大数据
 
-需要自定义实现方式的 a#aaa
+需要[自定义](https://github.com/wzypandaking/rms/blob/master/application/utils/word/Analysis.php)实现方式
 
 ## 未实现
 
