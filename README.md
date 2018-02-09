@@ -57,6 +57,17 @@
 //            throw new InvalidImageException(sprintf('Invalid image: %s', $this->source));
     }
 ```
+- 编辑vendor/phpoffice/phpword/src/PhpWord/Reader/RTF/Document.php
+```php
+    第268行
+    // todo check if key is exist
+    if (isset($this->flags['paragraph'])) {
+        if (true === $this->flags['paragraph']) {
+            $this->flags['paragraph'] = false;
+            $this->flags['text'] = $this->text;
+        }
+    }
+```
 
 
 ## 未实现
