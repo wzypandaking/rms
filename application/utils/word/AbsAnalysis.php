@@ -192,6 +192,8 @@ abstract class AbsAnalysis implements Analysis
     private function toString($file)
     {
         $tempfile = Config::get("temp_path") . '/' . Time::microtime() . '.html';
+        ! is_dir(dirname($tempfile)) && mkdir(basename($tempfile), 0777, true);
+
 //        echo $tempfile;
         if (strpos($file, '.docx') !== false) {
             $phpword = IOFactory::load($file, 'Word2007');
