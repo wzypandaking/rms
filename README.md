@@ -28,6 +28,37 @@
 
 需要[自定义](https://github.com/wzypandaking/rms/blob/master/application/utils/word/Analysis.php)实现方式
 
+## 安装 Install
+
+### 安装composer [传送门](http://docs.phpcomposer.com/00-intro.html#Installation-*nix)
+### 加载依赖
+- composer update
+- 编辑rms/vendor/phpoffice/phpword/src/PhpWord/Shared/AbstractEnum.php
+```php
+    第67行
+    public static function validate($value)
+    {
+        // todo modify only check value is not empty
+        if ($value) {
+            if (!self::isValid($value)) {
+                $calledClass = get_called_class();
+                $values = array_values(self::getConstants());
+                throw new \InvalidArgumentException("$value is not a valid value for $calledClass, possible values are " . implode(', ', $values));
+            }
+        }
+    }
+```
+- 编辑rms/vendor/phpoffice/phpword/src/PhpWord/Element/Image.php
+```php
+    第384行
+    if (!is_array($imageData)) {
+        //  todo modify give a default image type
+        $imageData = array(0, 0, 3);
+//            throw new InvalidImageException(sprintf('Invalid image: %s', $this->source));
+    }
+```
+
+
 ## 未实现
 
 目前系统没有用户概念，所有的人都可以进行上传，下载简历。就目前来说已经能满足我的需求了。如果有什么需要的可以联系我。
