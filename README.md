@@ -33,7 +33,7 @@
 ### 安装composer [传送门](http://docs.phpcomposer.com/00-intro.html#Installation-*nix)
 ### 加载依赖
 - composer update
-- 编辑rms/vendor/phpoffice/phpword/src/PhpWord/Shared/AbstractEnum.php
+- 编辑vendor/phpoffice/phpword/src/PhpWord/Shared/AbstractEnum.php
 ```php
     第67行
     public static function validate($value)
@@ -48,7 +48,7 @@
         }
     }
 ```
-- 编辑rms/vendor/phpoffice/phpword/src/PhpWord/Element/Image.php
+- 编辑vendor/phpoffice/phpword/src/PhpWord/Element/Image.php
 ```php
     第384行
     if (!is_array($imageData)) {
