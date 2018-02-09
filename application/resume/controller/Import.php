@@ -31,7 +31,7 @@ class Import extends Common
         }
         $uploadPath = Config::get('upload_path') . DIRECTORY_SEPARATOR . date('YmdHis');
         $info = $uploadFileObject->move($uploadPath);
-        if (! $info) {
+        if ($info === false) {
             return Result::wrap("服务端写入异常", false, null);
         }
         return $uploadPath . DIRECTORY_SEPARATOR . $info->getSaveName();
