@@ -63,7 +63,7 @@
             5、Offer率 = Offer数 / 面试数&nbsp;&nbsp;<br />
             6、转移率 = 转移数 / (总数 - 未面数)<br />
 
-            <table id="resume-list"></table>
+            <table id="interview-list"></table>
         </div>
     </div>
 
@@ -84,7 +84,7 @@
         var table = layui.table;
         var $ = layui.jquery;
         table.render({
-            elem: '#resume-list'
+            elem: '#interview-list'
             ,url: '/interview/lists' //数据接口
             ,page: true //开启分页
             ,cols: [[ //表头
@@ -96,17 +96,6 @@
                 ,{field: 'offer', title: 'Offer率', width: 80, templet:"#offerTpl"}
                 ,{field: 'transfer', title: '转移率', width: 80, templet:"#transferTpl"}
             ]]
-        });
-        $('#resume-search-form').submit(function () {
-            var param = {};
-            $.each(this.elements, function (k, child) {
-                param[child.name] = child.value;
-            });
-            table.reload("resume-list", {
-                url: '/interview/lists' //数据接口
-                ,where : param
-            });
-            return false;
         });
     });
 </script>
