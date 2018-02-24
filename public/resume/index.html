@@ -152,13 +152,13 @@
 </script>
 <script type="text/html" id="statusTpl">
     {{# if(d.status == 0) { }}
-        未预约
+        <span class="layui-bg-green layui-badge">未预约</span>
     {{# }else if(d.status == 1){ }}
-        预约中
+        <span class="layui-badge layui-bg-gray">预约中</span>
     {{# }else if(d.status == 2){ }}
-        通过
+        <span class="layui-bg-orange layui-badge">通过</span>
     {{# }else if(d.status == 3){ }}
-        淘汰
+        <span class="layui-bg-blue layui-badge">淘汰</span>
     {{# } }}
 </script>
 
