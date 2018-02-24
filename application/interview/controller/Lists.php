@@ -29,7 +29,7 @@ class Lists extends Common
         $start = $request->param("page", 1);
         $limit = $request->param("limit", 10);
         $list = $this->_list($module, $param, $start, $limit);
-        return PageResult::wrap($this->_count($module, $param, $start, $limit), $this->analysis($list));
+        return PageResult::wrap($this->_count($module, $param), $this->analysis($list));
     }
 
     private function analysis(& $list)

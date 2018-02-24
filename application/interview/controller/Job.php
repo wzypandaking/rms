@@ -33,7 +33,7 @@ class Job extends Common
         $start = $request->param("page", 1);
         $limit = $request->param("limit", 10);
         $list = $this->_list($module, $param, $start, $limit, $sort);
-        return PageResult::wrap($this->_count($module, $param, $start, $limit), $this->processResume($list));
+        return PageResult::wrap($this->_count($module, $param), $this->processResume($list));
     }
 
     private function processSearchParam(Request $request, & $searchParam)
