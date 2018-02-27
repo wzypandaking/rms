@@ -62,6 +62,19 @@ class Resume extends Common
         ));
     }
 
+    /**
+     * 待定，特殊原因未完成面试
+     * @param $resumeInfo
+     */
+    public function wait($resumeInfo)
+    {
+        $this->save(array(
+            'status'    => 5
+        ),array(
+            'id'    =>  $resumeInfo->id
+        ));
+    }
+
     public function batchImport($dataList)
     {
         $mobile = array();

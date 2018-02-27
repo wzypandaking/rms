@@ -44,6 +44,31 @@ class BookInterview extends Common
     }
 
     /**
+     * 面试次数
+     * @param $resumeInfo
+     * return int
+     */
+    public function numberOfBook($resumeInfo)
+    {
+        return $this->where(array(
+            'resume_id' =>  $resumeInfo->id,
+            'type'      =>  array('not in',  array(4, 5))
+        ))->count();
+    }
+
+    public function latestBook($resumeInfo)
+    {
+        return $this->where(array(
+            'resume_id' =>  $resumeInfo->id,
+            'type'  =>  array('not in', array(5))
+        ))->order(array(
+            'book_time'    =>  'desc'
+        ))->find();
+    }
+
+
+
+    /**
      * 通过面试
      * @param $resumeInfo
      */
@@ -96,7 +121,7 @@ class BookInterview extends Common
 
     /**
      * 将面试转发给其他面试官
-     * @param $resumeInfo
+     * @param $id
      */
     public function transfer($id)
     {
@@ -114,6 +139,25 @@ class BookInterview extends Common
         return $this->field("count(id) as count, interview_id,type")->where(array(
             'interview_id'    => array('in', $interviewerIdList)
         ))->group("interview_id,type")->select();
+    }
+
+    /**
+     * 由于特殊原因，未完成面试
+     * @param $resumeInfo
+     * @param $interviewerInfo
+     * @param $result
+     */
+    public function wait($resumeInfo, $interviewerInfo, $result)
+    {
+        $this->save(array(
+            'type'    =>  5,
+            'result'    =>  $result,
+            'interview_time'    =>  time()
+        ),array(
+            'resume_id'    =>  $resumeInfo->id,
+            'interview_id'  =>  $interviewerInfo->id,
+            'type'  =>  0,
+        ));
     }
 
 

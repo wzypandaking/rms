@@ -80,6 +80,7 @@
                                 <option value="1">已预约</option>
                                 <option value="2">已通过</option>
                                 <option value="3">已淘汰</option>
+                                <option value="5">待定</option>
                             </select>
                         </div>
                     </div>
@@ -121,6 +122,10 @@
                 {field: 'name', title: '姓名', width:100, fixed:'left'}
                 ,{field: 'mobile', title: '联系方式', width:120, fixed:'left'}
                 ,{field: 'status', title: '状态', width: 100, fixed:'left', templet:"#statusTpl"}
+                ,{field: 'no_interview', title: '面试官', width: 100,  templet:"#interviewTpl"}
+                ,{field: 'no_interview_number', title: '面试结果', width: 100,  templet:"#interviewNumberTpl"}
+                ,{field: 'no_interview_mobile', title: '电话', width: 100, templet:"#interviewMobileTpl"}
+                ,{field: 'no_interview_type', title: '面试结果', width: 100, templet:"#interviewTypeTpl"}
                 ,{field: 'sex', title: '性别', width:80, sort: true, templet:"#sexTpl"}
                 ,{field: 'post', title: '应聘岗位', width: 200}
                 ,{field: 'employed_time', title: '工作时间（年）', width: 140}
@@ -159,13 +164,67 @@
         <span class="layui-bg-orange layui-badge">通过</span>
     {{# }else if(d.status == 3){ }}
         <span class="layui-badge layui-bg-gray">淘汰</span>
+    {{# }else if(d.status == 5){ }}
+        <span class="layui-badge layui-bg-black">待定</span>
     {{# } }}
 </script>
+<script type="text/html" id="interviewTpl">
+    {{# if(d.interview_name !== undefined) { }}
+        {{d.interview_name}}
+    {{# } else { }}
+        -
+    {{# } }}
+</script>
+<script type="text/html" id="interviewTypeTpl">
+    {{# if(d.book_type !== undefined) { }}
+        {{# if (d.book_type==0) { }}
+        <span class="layui-badge-rim">未开始</span>
+        {{# } else if (d.book_type==1) { }}
+        <span class="layui-badge-rim layui-bg-orange">淘汰</span>
+        {{# } else if (d.book_type==2) { }}
+        <span class="layui-badge-rim layui-bg-green">通过</span>
+        {{# } else if (d.book_type==3) { }}
+        <span class="layui-badge-rim layui-bg-green">通过</span>
+        {{# } else if (d.book_type==4) { }}
+        <span class="layui-badge-rim layui-bg-green">移交</span>
+        {{# } else if (d.book_type==5) { }}
+        <span class="layui-badge-rim layui-bg-black">待定</span>
+        {{# } else { }}
+        <span class="layui-badge-rim">未知状态</span>
+        {{# } }}
+    {{# } else { }}
+        -
+    {{# } }}
+</script>
+<script type="text/html" id="interviewMobileTpl">
+    {{# if(d.interview_mobile !== undefined) { }}
+        {{d.interview_mobile}}
+    {{# } else { }}
+        -
+    {{# } }}
+</script>
+
+<script type="text/html" id="interviewNumberTpl">
+    {{# if(d.number_of_book !== undefined) { }}
+        {{numberOfChinese[d.number_of_book]}}面
+    {{# } else { }}
+        -
+    {{# } }}
+</script>
+
 
 <script type="text/html" id="operationTpl">
     <!-- 淘汰 & offer 不能再进行预约 -->
     {{# if(d.status != 2 && d.status != 3 ) { }}
-    <button class="layui-btn layui-btn-sm" data-title="预约面试" data-layer-width="600" data-layer-max="false" data-layer-height="480" data-target="/resume/book.html?resumeId={{d.id}}">预约面试</button>
+        <!-- 已经预约-->
+        {{# if(d.book_type !== undefined) { }}
+            <!-- (没有完成面试 | 面试通过 | offer)不能进行再次预约 -->
+            {{# if (d.book_type==2 || d.book_type==4 || d.book_type==5) { }}
+                <button class="layui-btn layui-btn-sm" data-title="预约面试" data-layer-width="600" data-layer-max="false" data-layer-height="480" data-target="/resume/book.html?resumeId={{d.id}}">预约面试</button>
+            {{# } }}
+        {{# } else { }}
+            <button class="layui-btn layui-btn-sm" data-title="预约面试" data-layer-width="600" data-layer-max="false" data-layer-height="480" data-target="/resume/book.html?resumeId={{d.id}}">预约面试</button>
+        {{# } }}
     {{# } }}
     <button class="layui-btn layui-btn-sm layui-bg-orange" data-title="面试记录" data-layer-width="600" data-layer-max="true" data-layer-height="480" data-target="/interview/timeline.html?resumeId={{d.id}}">面试记录</button>
     {{# if(d.status == 2) { }}
@@ -176,6 +235,7 @@
     {{# } }}
 </script>
 <script type="text/javascript">
+    var numberOfChinese = ['未', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
     layui.use(["layer", 'jquery'], function () {
         var layer = layui.layer;
         var $ = layui.jquery;

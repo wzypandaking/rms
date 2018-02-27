@@ -113,6 +113,8 @@ class Download
                 $data['type'] = 'offer';
             } else if ($value->type == 4) {
                 $data['type'] = '转移';
+            } else if ($value->type == 5) {
+                $data['type'] = '待定';
             } else {
                 $data['type'] = '未知状态';
             }

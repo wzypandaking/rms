@@ -22,7 +22,7 @@ class Feedback
     public function confirm(Request $request)
     {
         $type = $request->post("type", -1);
-        if (!in_array($type, array(0, 1, 2))) {
+        if (!in_array($type, array(0, 1, 2, 5))) {
             return Result::wrap("参数错误", false, null);
         }
 
@@ -42,6 +42,10 @@ class Feedback
         } else if ($type == 2) {    // 通过 给offer
             Loader::model("BookInterview")->passAndOffer($resumeInfo, $interviewerInfo, $request->post("result"));
             Loader::model("resume/resume")->offer($resumeInfo);
+        } else if ($type == 5) {    //  待定
+            Loader::model("BookInterview")->wait($resumeInfo, $interviewerInfo, $request->post("result"));
+            Loader::model("resume/resume")->wait($resumeInfo);
+
         } else {
             // 非正常参数
         }
