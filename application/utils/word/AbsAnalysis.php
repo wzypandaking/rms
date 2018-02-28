@@ -13,7 +13,6 @@ use app\utils\Time;
 use PhpOffice\PhpWord\IOFactory;
 use Smalot\PdfParser\Parser;
 use think\Config;
-use think\Exception;
 
 abstract class AbsAnalysis implements Analysis
 {
@@ -225,6 +224,9 @@ abstract class AbsAnalysis implements Analysis
     {
         $match = array();
         preg_match('/<body>([\s\S]*?)<\/body>/', $html, $match);
+        if (empty($match)) {
+            return '';
+        }
         return strip_tags($match[0]);
     }
 
