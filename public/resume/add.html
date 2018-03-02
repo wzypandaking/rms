@@ -139,7 +139,7 @@
             elem: '#upload-btn',
             url : '/resume/import/single',
             accept:'file',
-            exts:'doc|docx|pdf',
+            exts:'doc|docx|pdf|jpeg|jpg',
             done: function (res) {
                 $('input[name="resume_file_path"]').val(res.data);
             }
